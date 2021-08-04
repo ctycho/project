@@ -19,53 +19,103 @@ P.S. Здесь есть несколько вариантов решения з
 
 // Возьмите свой код из предыдущей практики
 
-const movieDB = {
-    movies: [
-        "Логан",
-        "Лига справедливости",
-        "Ла-ла лэнд",
-        "Одержимость",
-        "Скотт Пилигрим против..."
-    ]
-};
+document.addEventListener('DOMContentLoaded', () => {
+	const movieDB = {
+		movies: [
+			"Логан",
+			"Лига справедливости",
+			"Ла-ла лэнд",
+			"Одержимость",
+			"Скотт Пилигрим против..."
+		]
+	};
+	
+	const adv = document.querySelectorAll('.promo__adv img'),
+		poster = document.querySelector('.promo__bg'),
+		genre = poster.querySelector('.promo__genre'),
+		movieList = document.querySelector('.promo__interactive-list'),
+		deleteMovie = movieList.querySelectorAll('delete');
+	
+	const addForm = document.querySelector('form.add'),
+		addInput = addForm.querySelector('.adding__input'),
+		checkbox = addForm.querySelector('[type="checkbox"]');
+	
+	const deleteAdv = (arr) => {
+		arr.forEach(item => {
+			item.remove();
+		});
+	};
 
-const adv = document.querySelectorAll('.promo__adv img'),
-	poster = document.querySelector('.promo__bg'),
-	genre = poster.querySelector('.promo__genre'),
-	movieList = document.querySelector('.promo__interactive-list');
+	deleteAdv(adv);
 
-const btn = document.querySelector('button'),
-	addMovie = document.querySelector('.adding__input');
+	const makeChanges = () => {
+		genre.textContent = 'Драма';
+		
+		poster.style.backgroundImage = 'url("img/bg.jpg")';
+	};
+	
+	makeChanges();
 
-adv.forEach(item => {
-	item.remove();
-});
+	const sortArr = (arr) => {
+		arr.sort();
+	};
 
-genre.textContent = 'Драма';
+	sortArr(movieDB.movies);
+	
+	let createtMovieList = (films, parent) => {
+		parent.innerHTML = '';
 
-poster.style.backgroundImage = 'url("img/bg.jpg")';
+		films.forEach((film, i) => {
+			parent.innerHTML += `
+				<li class="promo__interactive-item">${i + 1} ${film}
+					<div class="delete"></div>
+				</li>`;
+		});
+	}
+	
+	createtMovieList(movieDB.movies, movieList);
 
-movieList.innerHTML = '';
+	function deleteFromArr(arr, index) {
 
-movieDB.movies.sort(); 
+	};
+	
+	addForm.addEventListener('submit', (event) => {
+		event.preventDefault();
 
-let insertMovie = () => {
-	movieDB.movies.forEach((film, i) => {
-		movieList.innerHTML += `
-			<li class="promo__interactive-item">${i + 1} ${film}
-				<div class="delete"></div>
-			</li>`;
+		let newFilm = addInput.value;
+
+		if (newFilm) {
+			if (newFilm.length > 21) {
+				newFilm = `${newFilm.substring(0, 22)}...`;
+			}
+			movieDB.movies.push(newFilm);
+			sortArr(movieDB.movies);
+			createtMovieList(movieDB.movies, movieList);
+		}
+		event.target.reset();
 	});
-}
+	// deleteMovie.forEach((btn, i) => {
+	// 	btn.addEventListener('click', () => {
+	// 		btn.parentElement.remove();
+	// 		movieDB.movies.splice(i, 1);
+	// 	});
+	// });
+	document.querySelectorAll('.delete').forEach((btn, i) => {
+		btn.addEventListener('click', () => {
+			btn.parentElement.remove();
+			movieDB.movies.splice(i, 1);
 
-insertMovie();
+			createtMovieList(movieDB.movies, movieList);
+		});
+	});
+	// console.log(addForm);
+	// console.log(checkbox);
+	// console.log(deleteMovie);
 
-btn.addEventListener('click', () => { 
-	movieDB.movies.push(addMovie.value);
-	console.log(movieDB.movies);
-	// insertMovie();
+
 });
-console.log(btn);
+
+
 
 
 
