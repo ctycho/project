@@ -46,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
 		});
 	};
 
-	deleteAdv(adv);
 
 	const makeChanges = () => {
 		genre.textContent = 'Драма';
@@ -54,16 +53,14 @@ document.addEventListener('DOMContentLoaded', () => {
 		poster.style.backgroundImage = 'url("img/bg.jpg")';
 	};
 	
-	makeChanges();
 
 	const sortArr = (arr) => {
 		arr.sort();
 	};
 
-	sortArr(movieDB.movies);
-	
-	let createtMovieList = (films, parent) => {
+	function createtMovieList(films, parent) {
 		parent.innerHTML = '';
+		sortArr(films);
 
 		films.forEach((film, i) => {
 			parent.innerHTML += `
@@ -71,22 +68,29 @@ document.addEventListener('DOMContentLoaded', () => {
 					<div class="delete"></div>
 				</li>`;
 		});
-	}
+		document.querySelectorAll('.delete').forEach((btn, i) => {
+			btn.addEventListener('click', () => {
+				btn.parentElement.remove();
+				movieDB.movies.splice(i, 1);
 	
-	createtMovieList(movieDB.movies, movieList);
+				createtMovieList(films, parent);
+			});
+		});
+	}
 
-	function deleteFromArr(arr, index) {
-
-	};
 	
 	addForm.addEventListener('submit', (event) => {
 		event.preventDefault();
 
 		let newFilm = addInput.value;
+		const favourite = checkbox.checked;
 
 		if (newFilm) {
 			if (newFilm.length > 21) {
 				newFilm = `${newFilm.substring(0, 22)}...`;
+			}
+			if (favourite) {
+				console.log("Added favourite movie");
 			}
 			movieDB.movies.push(newFilm);
 			sortArr(movieDB.movies);
@@ -94,24 +98,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		}
 		event.target.reset();
 	});
-	// deleteMovie.forEach((btn, i) => {
-	// 	btn.addEventListener('click', () => {
-	// 		btn.parentElement.remove();
-	// 		movieDB.movies.splice(i, 1);
-	// 	});
-	// });
-	document.querySelectorAll('.delete').forEach((btn, i) => {
-		btn.addEventListener('click', () => {
-			btn.parentElement.remove();
-			movieDB.movies.splice(i, 1);
 
-			createtMovieList(movieDB.movies, movieList);
-		});
-	});
-	// console.log(addForm);
-	// console.log(checkbox);
-	// console.log(deleteMovie);
-
+	deleteAdv(adv);
+	makeChanges();
+	createtMovieList(movieDB.movies, movieList);
 
 });
 
